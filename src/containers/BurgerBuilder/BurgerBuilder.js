@@ -19,31 +19,49 @@ class BurgerBuilder extends Component {
          cheese: 0,
          meat: 0,
       },
-      totalPrice: 4
+      totalPrice: 4,
+      purchasable: false
    }
 
    addIngredientHandler = (type) => {
-      this.setState((prevState, props) => {
-         return {
-            ingredients: {
-               ...this.state.ingredients,
-               [type]: prevState.ingredients[type] + 1
-            },
-            totalPrice: prevState.totalPrice + INGREDIENT_PRICES[type]
-         };
+
+      const updatedIngredients = {
+         ...this.state.ingredients,
+         [type]: this.state.ingredients[type] + 1
+      }
+
+      this.setState({
+         ingredients: updatedIngredients,
+         totalPrice: this.state.totalPrice + INGREDIENT_PRICES[type]
       });
+
+      this.updatePurchaseState(updatedIngredients);
    }
 
    removeIngredientHandler = (type) => {
-      this.setState((prevState, props) => {
-         return {
-            ingredients: {
-               ...this.state.ingredients,
-               [type]: (prevState.ingredients[type] > 0) ? prevState.ingredients[type] - 1 : 0
-            },
-            totalPrice: (prevState.totalPrice > 4) ? prevState.totalPrice - INGREDIENT_PRICES[type] : 4
-         };
+
+      const updatedIngredients = {
+         ...this.state.ingredients,
+         [type]: (this.state.ingredients[type] > 0) ? this.state.ingredients[type] - 1 : 0
+      }
+
+      this.setState({
+         ingredients: updatedIngredients,
+         totalPrice: (this.state.totalPrice > 4) ? this.state.totalPrice - INGREDIENT_PRICES[type] : 4
       });
+
+      this.updatePurchaseState(updatedIngredients);
+   }
+
+   updatePurchaseState = (ingredients) => {
+
+      const sum = Object.keys(ingredients).map((ingKey) => {
+         return ingredients[ingKey]
+      }).reduce(function (sum, ingValue) {
+         return sum + ingValue
+      }, 0);
+
+      this.setState({purchasable: sum > 0});
    }
 
    render() {
@@ -64,6 +82,7 @@ class BurgerBuilder extends Component {
                removeIngredient={this.removeIngredientHandler}
                disabled={disabledInfo}
                price={this.state.totalPrice}
+               purchasable={this.state.purchasable}
             />
          </Auxiliary>
       );
