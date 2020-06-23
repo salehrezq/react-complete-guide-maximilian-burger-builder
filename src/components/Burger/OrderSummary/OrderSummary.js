@@ -1,38 +1,41 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Aux from '../../../hoc/Auxiliary';
 import Button from "../../UI/Button/Button";
 
-const OrderSummary = props => {
+class OrderSummary extends Component {
 
-   const ingredients = props.ingredients;
+   render() {
 
-   const ingredientSummary = Object.keys(ingredients).map(ingKey => {
+      const ingredients = this.props.ingredients;
+
+      const ingredientSummary = Object.keys(ingredients).map(ingKey => {
+         return (
+            <li key={ingKey}>
+               <span style={{textTransform: 'capitalize'}}>{ingKey}</span>
+               : {ingredients[ingKey]}
+            </li>
+         );
+      });
+
       return (
-         <li key={ingKey}>
-            <span style={{textTransform: 'capitalize'}}>{ingKey}</span>
-            : {ingredients[ingKey]}
-         </li>
-      );
-   });
-
-   return (
-      <Aux>
-         <h3>Your Order</h3>
-         <p>A delicious burger with the following ingredients:</p>
-         <ul>
-            {ingredientSummary}
-         </ul>
-         <p><strong>Total price is {props.totalPrice.toFixed(2)}</strong></p>
-         <p>Continue to Checkout?</p>
-         <Button
-            btnType="Danger"
-            clicked={props.purchaseCanceled}
-         >Cancel</Button>
-         <Button
-            btnType="Success"
-            clicked={props.purchaseContinued}
-         >Continue</Button>
-      </Aux>);
+         <Aux>
+            <h3>Your Order</h3>
+            <p>A delicious burger with the following ingredients:</p>
+            <ul>
+               {ingredientSummary}
+            </ul>
+            <p><strong>Total price is {this.props.totalPrice.toFixed(2)}</strong></p>
+            <p>Continue to Checkout?</p>
+            <Button
+               btnType="Danger"
+               clicked={this.props.purchaseCanceled}
+            >Cancel</Button>
+            <Button
+               btnType="Success"
+               clicked={this.props.purchaseContinued}
+            >Continue</Button>
+         </Aux>);
+   }
 };
 
 export default OrderSummary;
