@@ -4,6 +4,7 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import axios from '../../axios-orders';
 
 const INGREDIENT_PRICES = {
    salad: 0.5,
@@ -76,7 +77,34 @@ class BurgerBuilder extends Component {
    }
 
    purchaseContinueHandler = () => {
-      alert("You continue");
+
+      const order = {
+         ingredients: this.state.ingredients,
+         // You must not do this in your real application
+         // The price must be calculated at the back end.
+         price: this.state.totalPrice,
+         // Additional dummy data:
+         customer: {
+            name: 'Saleh Rezq',
+            address: {
+               street: 'Saglol street',
+               city: 'Fayoum',
+               country: 'Egypt'
+            },
+            email: 'test@example.com'
+         },
+         deliveryMethod: 'fastest'
+      }
+
+      // orders is a name you choose,
+      // and it is handled by Firebase to store this type of posts
+      // .json is a requirement by Firebase
+      axios.post('/orders.json', order)
+         .then(response => {
+            return console.log(response);
+         }).catch(error => {
+         console.log(error);
+      });
    }
 
    render() {
